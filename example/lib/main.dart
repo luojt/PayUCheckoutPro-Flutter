@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 import 'package:payu_checkoutpro_flutter/PayUConstantKeys.dart';
 import 'dart:convert';
-//Dont Use this file and do the hash calculation in backend. 
-import 'package:payu_checkoutpro_flutter_example/HashService.dart';
 
+//Dont Use this file and do the hash calculation in backend.
+import 'package:payu_checkoutpro_flutter_example/HashService.dart';
 
 void main() {
   runApp(MaterialApp(home: MyApp()));
@@ -18,16 +18,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> implements PayUCheckoutProProtocol {
-  
   late PayUCheckoutProFlutter _checkoutPro;
 
   @override
   void initState() {
     super.initState();
-      _checkoutPro = PayUCheckoutProFlutter(this);
+    _checkoutPro = PayUCheckoutProFlutter(this);
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
@@ -78,10 +77,10 @@ class _MyAppState extends State<MyApp> implements PayUCheckoutProProtocol {
 
     Map hashResponse = {};
 
-    //Keep the salt and hash calculation logic in the backend for security reasons. Don't use local hash logic. 
-    //Uncomment following line to test the test hash.  
+    //Keep the salt and hash calculation logic in the backend for security reasons. Don't use local hash logic.
+    //Uncomment following line to test the test hash.
     // hashResponse = HashService.generateHash(response);
-    
+
     _checkoutPro.hashGenerated(hash: hashResponse);
   }
 
@@ -106,15 +105,15 @@ class _MyAppState extends State<MyApp> implements PayUCheckoutProProtocol {
   }
 }
 
-class PayUTestCredentials { 
+class PayUTestCredentials {
   //Find the test credentials from dev guide: https://devguide.payu.in/flutter-sdk-integration/getting-started-flutter-sdk/mobile-sdk-test-environment/
-  static const merchantKey = "3TnMpV";// Add you Merchant Key
+  static const merchantKey = "3TnMpV"; // Add you Merchant Key
   static const iosSurl = "<ADD YOUR iOS SURL>";
   static const iosFurl = "<ADD YOUR iOS FURL>";
   static const androidSurl = "<ADD YOUR ANDROID SURL>";
   static const androidFurl = "<ADD YOUR ANDROID FURL>";
 
-  static const merchantAccessKey = "";//Add Merchant Access Key - Optional
+  static const merchantAccessKey = ""; //Add Merchant Access Key - Optional
   static const sodexoSourceId = ""; //Add sodexo Source Id - Optional
 }
 
@@ -123,16 +122,23 @@ class PayUParams {
   static Map createPayUPaymentParams() {
     var siParams = {
       PayUSIParamsKeys.isFreeTrial: true,
-      PayUSIParamsKeys.billingAmount: '1',              //Required
-      PayUSIParamsKeys.billingInterval: 1,              //Required
-      PayUSIParamsKeys.paymentStartDate: '2023-04-20',  //Required
-      PayUSIParamsKeys.paymentEndDate: '2023-04-30',    //Required
-      PayUSIParamsKeys.billingCycle:                    //Required
-          'daily', //Can be any of 'daily','weekly','yearly','adhoc','once','monthly'
+      PayUSIParamsKeys.billingAmount: '1',
+      //Required
+      PayUSIParamsKeys.billingInterval: 1,
+      //Required
+      PayUSIParamsKeys.paymentStartDate: '2023-04-20',
+      //Required
+      PayUSIParamsKeys.paymentEndDate: '2023-04-30',
+      //Required
+      PayUSIParamsKeys.billingCycle: //Required
+          'daily',
+      //Can be any of 'daily','weekly','yearly','adhoc','once','monthly'
       PayUSIParamsKeys.remarks: 'Test SI transaction',
       PayUSIParamsKeys.billingCurrency: 'INR',
-      PayUSIParamsKeys.billingLimit: 'ON', //ON, BEFORE, AFTER
-      PayUSIParamsKeys.billingRule: 'MAX', //MAX, EXACT
+      PayUSIParamsKeys.billingLimit: 'ON',
+      //ON, BEFORE, AFTER
+      PayUSIParamsKeys.billingRule: 'MAX',
+      //MAX, EXACT
     };
 
     var additionalParam = {
@@ -143,21 +149,19 @@ class PayUParams {
       PayUAdditionalParamKeys.udf5: "udf5",
       PayUAdditionalParamKeys.merchantAccessKey:
           PayUTestCredentials.merchantAccessKey,
-      PayUAdditionalParamKeys.sourceId:PayUTestCredentials.sodexoSourceId,
+      PayUAdditionalParamKeys.sourceId: PayUTestCredentials.sodexoSourceId,
     };
 
-
-var spitPaymentDetails =
-   {
-     "type": "absolute",
-     "splitInfo": {
-       PayUTestCredentials.merchantKey: {
-         "aggregatorSubTxnId": "1234567540099887766650091", //unique for each transaction
-         "aggregatorSubAmt": "1"
-       }
-     }
-   };
-
+    var spitPaymentDetails = {
+      "type": "absolute",
+      "splitInfo": {
+        PayUTestCredentials.merchantKey: {
+          "aggregatorSubTxnId": "1234567540099887766650091",
+          //unique for each transaction
+          "aggregatorSubAmt": "1"
+        }
+      }
+    };
 
     var payUPaymentParams = {
       PayUPaymentParamKey.key: PayUTestCredentials.merchantKey,
@@ -169,14 +173,18 @@ var spitPaymentDetails =
       PayUPaymentParamKey.ios_surl: PayUTestCredentials.iosSurl,
       PayUPaymentParamKey.ios_furl: PayUTestCredentials.iosFurl,
       PayUPaymentParamKey.android_surl: PayUTestCredentials.androidSurl,
-      PayUPaymentParamKey.android_furl: PayUTestCredentials.androidFurl, 
-      PayUPaymentParamKey.environment: "0", //0 => Production 1 => Test
-      PayUPaymentParamKey.userCredential: null, //Pass user credential to fetch saved cards => A:B - Optional
-      PayUPaymentParamKey.transactionId:"<ADD TRANSACTION ID>", //DateTime.now().millisecondsSinceEpoch.toString()
+      PayUPaymentParamKey.android_furl: PayUTestCredentials.androidFurl,
+      PayUPaymentParamKey.environment: "0",
+      //0 => Production 1 => Test
+      PayUPaymentParamKey.userCredential: null,
+      //Pass user credential to fetch saved cards => A:B - Optional
+      PayUPaymentParamKey.transactionId: "<ADD TRANSACTION ID>",
+      //DateTime.now().millisecondsSinceEpoch.toString()
       PayUPaymentParamKey.additionalParam: additionalParam,
       PayUPaymentParamKey.enableNativeOTP: true,
-      PayUPaymentParamKey.splitPaymentDetails:json.encode(spitPaymentDetails),
-      PayUPaymentParamKey.userToken:"", //Pass a unique token to fetch offers. - Optional
+      PayUPaymentParamKey.splitPaymentDetails: json.encode(spitPaymentDetails),
+      PayUPaymentParamKey.userToken: "",
+      //Pass a unique token to fetch offers. - Optional
     };
 
     return payUPaymentParams;
@@ -200,10 +208,13 @@ var spitPaymentDetails =
       {"payment_type": "CARD", "enforce_ibiboCode": "UTIBENCC"},
     ];
 
-     var customNotes = [
+    var customNotes = [
       {
         "custom_note": "Its Common custom note for testing purpose",
-        "custom_note_category": [PayUPaymentTypeKeys.emi,PayUPaymentTypeKeys.card]
+        "custom_note_category": [
+          PayUPaymentTypeKeys.emi,
+          PayUPaymentTypeKeys.card
+        ]
       },
       {
         "custom_note": "Payment options custom note",
